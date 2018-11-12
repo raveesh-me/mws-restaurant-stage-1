@@ -273,3 +273,11 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+
+
+/* Mobile Screen: */
+@media screen and (max-width: 420px){
+  nav{
+    background-color: red;
+  }
+}
