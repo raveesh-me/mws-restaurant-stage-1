@@ -139,7 +139,7 @@ nav h1 a {
 }
 #restaurants-list li {
   background-color: #fff;
-  border: 2px solid #ccc;
+  box-shadow: 2px 4px 4px #ddd;
   font-family: Arial,sans-serif;
   margin: 15px;
   min-height: 380px;
@@ -277,7 +277,11 @@ nav h1 a {
 
 /* Mobile Screen: */
 @media screen and (max-width: 420px){
-  nav{
+  nav{/*TODO: RED is Just to indicate wether this MediaQuery is active, delete it after done */
     background-color: red;
+  }
+
+  #restaurants-list li{
+    width: auto;
   }
 }
