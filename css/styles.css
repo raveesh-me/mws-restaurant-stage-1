@@ -281,7 +281,19 @@ nav h1 a {
     background-color: red;
   }
 
+  #restaurants-list{
+    padding: 30px 10px 60px;
+  }
+
   #restaurants-list li{
     width: auto;
+    padding: 0%;
   }
+  
+  #restaurants-list .restaurant-img{
+    width: 100%;
+    min-height: auto;
+
+  }
+  
 }
