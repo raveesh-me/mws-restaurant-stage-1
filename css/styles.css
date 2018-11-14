@@ -146,24 +146,27 @@ nav h1 a {
   padding: 30px 15px 60px;
   text-align: center;
 }
+
 #restaurants-list li {
   background-color: #fff;
   box-shadow: 2px 4px 4px #ddd;
   font-family: Arial,sans-serif;
   margin: 15px;
-  min-height: 380px;
-  padding: 0 30px 25px;
+  /* min-height: 380px; */
+  /* padding: 0 30px 25px; */
   text-align: left;
   width: 260px;
 }
+
 #restaurants-list .restaurant-img {
   background-color: #ccc;
   display: block;
   margin: 0;
   max-width: 100%;
-  min-height: 248px;
+  /* min-height: 248px; */
   min-width: 100%;
 }
+
 #restaurants-list li h1 {
   color: #f18200;
   font-family: Arial,sans-serif;
@@ -171,27 +174,30 @@ nav h1 a {
   font-weight: 200;
   letter-spacing: 0;
   line-height: 1.3;
-  margin: 20px 0 10px;
+  margin: 20px 10px 10px;
   text-transform: uppercase;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 #restaurants-list p {
-  margin: 0;
+  margin: 0 10px;
   font-size: 11pt;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
+
 #restaurants-list li a {
   background-color: orange;
-  border-bottom: 3px solid #eee;
   color: #fff;
-  display: inline-block;
+  display: block;
   font-size: 10pt;
-  margin: 15px 0 0;
-  padding: 8px 30px 10px;
+  padding: 11px 20px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  margin: 10px;
 }
 
 /* ====================== Restaurant Details ====================== */
@@ -291,21 +297,6 @@ nav h1 a {
 @media screen and (max-width: 480px){
   nav{/*TODO: RED is Just to indicate wether this MediaQuery is active, delete it after done */
     background-color: red;
-  }
-
-  #restaurants-list{
-    padding: 30px 10px 60px;
-  }
-
-  #restaurants-list li{
-    width: auto;
-    padding: 0%;
-  }
-  
-  #restaurants-list .restaurant-img{
-    width: 100%;
-    min-height: auto;
-
   }
 
   .filter-options select{
