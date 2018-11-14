@@ -133,6 +133,8 @@ nav h1 a {
 
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
+  display: flex;
+  flex-wrap: wrap;
   background-color: #f3f3f3;
   list-style: outside none none;
   margin: 0;
@@ -277,7 +279,7 @@ nav h1 a {
 }
 
 
-/* Mobile Screen: */
+/* =========================:Mobile Screen:===================== */
 @media screen and (max-width: 480px){
   nav{/*TODO: RED is Just to indicate wether this MediaQuery is active, delete it after done */
     background-color: red;
