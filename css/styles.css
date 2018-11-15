@@ -233,11 +233,7 @@ nav h1 a {
   line-height: 1.1;
 }
 #restaurant-img {
-  max-width: 75%;
-  display: block;
   width: inherit;
-  margin-left: auto;
-  margin-right: auto;
 }
 #restaurant-address {
   font-size: 12pt;
@@ -301,10 +297,6 @@ nav h1 a {
 
   #restaurants-list li{
     width: calc(100vw - 30px);
-  }
-
-  #restaurant-img{
-    max-width: 100%;
   }
   
 }
