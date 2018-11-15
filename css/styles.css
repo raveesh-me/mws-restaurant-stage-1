@@ -295,9 +295,6 @@ nav h1 a {
 
 /* =========================:Mobile Screen:===================== */
 @media screen and (max-width: 480px){
-  nav{/*TODO: RED is Just to indicate wether this MediaQuery is active, delete it after done */
-    background-color: red;
-  }
 
   .filter-options select{
     width: calc(100vw - 30px);
