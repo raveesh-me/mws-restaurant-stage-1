@@ -302,5 +302,11 @@ nav h1 a {
   .filter-options select{
     width: calc(100vw - 30px);
   }
+
+  #restaurants-list li{
+    width: calc(100vw - 30px);
+  }
+
+
   
 }
