@@ -88,7 +88,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const imageBaseURL = DBHelper.imageUrlForRestaurant(restaurant);
+  const imgParts = imageBaseURL.split('.');
+  const smallImageUrl = imgParts[0]+ '-banner-small.' + imgParts[1];
+  const mediumImageUrl = imgParts[0]+ '-banner-medium.' + imgParts[1];
+  const largeImageUrl = imgParts[0]+ '-banner-large.' + imgParts[1];
+  image.src = imageBaseURL;
+  image.srcset = `${smallImageUrl} 260w, ${mediumImageUrl} 420w, ${largeImageUrl} 800w`;
+  image.sizes = "100vw";
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
