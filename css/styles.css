@@ -278,6 +278,7 @@ nav h1 a {
 #reviews-list li {
   background-color: #fff;
   display: block;
+  box-shadow: 2px 4px 4px #ddd;
   list-style-type: none;
   margin: 0 0 30px;
   overflow: hidden;
