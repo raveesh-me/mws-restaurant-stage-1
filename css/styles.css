@@ -260,14 +260,18 @@ nav h1 a {
 }
 
 #reviews-container h2 {
+  text-align: center;
   color: #f58500;
   font-size: 24pt;
   font-weight: 300;
   letter-spacing: -1px;
   padding-bottom: 1pt;
-  margin-left: 10px;
 }
 #reviews-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
   margin: 0;
   padding: 0;
 }
@@ -279,8 +283,10 @@ nav h1 a {
   overflow: hidden;
   padding: 10px 0;
   /* position: relative; */
-  width: 100%;
-  max-width: 300px;
+  width: 100vw;
+  max-width: 370px;
+  margin: 10px 10px;
+  padding: 5px;
 }
 
 #reviews-list li p {
@@ -306,6 +312,10 @@ nav h1 a {
 
   #restaurants-list li{
     width: calc(100vw - 30px);
+  }
+
+  #reviews-list li {
+    max-width: calc(100vw - 30px);
   }
   
 }
