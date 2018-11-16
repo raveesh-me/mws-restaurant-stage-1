@@ -228,14 +228,16 @@ nav h1 a {
   font-size: 20pt;
   font-weight: 200;
   letter-spacing: 0;
-  margin: 15px 0 30px;
+  margin: 15px 0 15px;
   text-transform: uppercase;
   line-height: 1.1;
+  text-align: center;
 }
 #restaurant-img {
   width: inherit;
 }
 #restaurant-address {
+  text-align: center;
   font-size: 12pt;
   margin: 10px 0px;
 }
@@ -249,11 +251,12 @@ nav h1 a {
   padding: 2px 0;
   text-align: center;
   text-transform: uppercase;
-	width: 90%;
+	width: 100%;
 }
 #restaurant-container, #reviews-container {
   padding: 0 0 40px;
   width: 100%;
+  align-content: center;
 }
 #reviews-container {
   padding: 30px 40px 80px;
@@ -280,13 +283,19 @@ nav h1 a {
   /* position: relative; */
   width: 85%;
 }
+
 #reviews-list li p {
   margin: 0 0 10px;
 }
+
 #restaurant-hours td {
   color: #666;
 }
 
+#restaurant-hours{
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /* =========================:Mobile Screen:===================== */
 @media screen and (max-width: 480px){
