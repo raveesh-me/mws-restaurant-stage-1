@@ -165,6 +165,7 @@ createRestaurantHTML = (restaurant) => {
   const smallImageUrl = imgParts[0]+ '-small.' + imgParts[1];
   const mediumImageUrl = imgParts[0]+ '-medium.' + imgParts[1];
   const largeImageUrl = imgParts[0]+ '-large.' + imgParts[1];
+  image.alt = `Photo of ${restaurant.name}`;
   image.src = imageBaseURL;
   image.srcset = `${smallImageUrl} 260w, ${mediumImageUrl} 420w, ${largeImageUrl} 800w`;
   image.sizes = "(max-width: 480px) calc(100vw - 30px), 260px";
