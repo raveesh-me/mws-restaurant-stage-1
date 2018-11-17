@@ -111,7 +111,7 @@ nav h1 a {
 .filter-options {
   width: 100%;
   /* height: auto; changed to auto */
-  background-color: #3397DB;
+  background-color: #005e8f;
   align-items: center;
   padding: 2vh 0;
 }
@@ -168,7 +168,7 @@ nav h1 a {
 }
 
 #restaurants-list li h1 {
-  color: #f18200;
+  color: #b56000;
   font-family: Arial,sans-serif;
   font-size: 14pt;
   font-weight: 200;
@@ -189,7 +189,7 @@ nav h1 a {
 }
 
 #restaurants-list li a {
-  background-color: orange;
+  background-color: #b56000;
   color: #fff;
   display: block;
   font-size: 10pt;
