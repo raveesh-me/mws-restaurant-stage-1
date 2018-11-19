@@ -93,6 +93,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const smallImageUrl = imgParts[0]+ '-banner-small.' + imgParts[1];
   const mediumImageUrl = imgParts[0]+ '-banner-medium.' + imgParts[1];
   const largeImageUrl = imgParts[0]+ '-banner-large.' + imgParts[1];
+  image.alt = `Photo of ${restaurant.name}`;
   image.src = imageBaseURL;
   image.srcset = `${smallImageUrl} 260w, ${mediumImageUrl} 420w, ${largeImageUrl} 800w`;
   image.sizes = "100vw";
