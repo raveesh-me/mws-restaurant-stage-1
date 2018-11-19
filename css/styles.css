@@ -317,3 +317,8 @@ nav h1 a {
   }
   
 }
+
+/* =====================Leaflet control attribition============== */
+.leaflet-container a{
+  color: #00567a !important;
+}
