@@ -40,6 +40,23 @@
     crossorigin=""></script>
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+ 
+  <script>
+    console.log('Fun running script');
+    if ('serviceWorker' in navigator){
+    // Use the window load event to keep the page load performant
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(){
+            console.log('SERVICE_WORKER_REGISTRATION: Passed!');
+          })
+          .catch(function(error){
+            console.log(`SERVICE_WORKER_REGISTRATION: failed with ${error}`);
+          });
+      });
+    }
+  </script>
+  
   <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script> -->
 
 
