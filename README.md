@@ -8,7 +8,9 @@
 Please follow these links to see commits in order of my work.
 
 [Pull request 2](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/2): Making responsive
+
 [Pull request 3](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/3): Accessibility
+
 [Pull request 4](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/4): Enabling offline
 
 Hope you enjoy it.
