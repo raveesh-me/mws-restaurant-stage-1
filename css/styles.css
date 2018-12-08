@@ -223,7 +223,7 @@ nav h1 a {
   /* position: absolute; */
   width: 100%;
 }
-#restaurant-name {
+#restaurant-name, #review_headline {
   color: #b56000;
   font-family: Arial,sans-serif;
   font-size: 20pt;
