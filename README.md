@@ -13,5 +13,7 @@ Please follow these links to see commits in order of my work.
 
 [Pull request 4](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/4): Enabling offline
 
+[Pull request 5](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/4): Implementing recommendations after `review-01`
+
 Hope you enjoy it.
 Bests.
