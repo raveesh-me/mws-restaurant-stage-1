@@ -171,7 +171,7 @@ createRestaurantHTML = (restaurant) => {
   image.sizes = "(max-width: 480px) calc(100vw - 30px), 260px";
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
 
@@ -217,4 +217,3 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 } */
-
