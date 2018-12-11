@@ -18,7 +18,7 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    const fetchDatafromServer = fetch(DBHelper.DATABASE_URL).then(function(response) {
+    const fetchDataFromServer = fetch(DBHelper.DATABASE_URL).then(function(response) {
       return response.json()
     });
 
@@ -41,9 +41,14 @@ class DBHelper {
       });
     }
 
-    fetchDatafromServer.then(function(restaurants) {
+    const fetchDataFromIDB = dbPromise.then(db=>{
+      const tx = db.transaction('restaurants');
+      return tx.objectStore('restaurants').get('restaurants');
+    });
+
+    fetchDataFromIDB.then(function(restaurants) {
       callback(null, restaurants);
-      saveDataToIdb(restaurants);
+      // saveDataToIdb(restaurants);
     }).catch(function(error) {
       console.log(`${error}`);
     });
