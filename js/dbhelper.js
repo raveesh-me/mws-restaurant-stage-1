@@ -12,22 +12,72 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
+
+
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-
-    fetch(DBHelper.DATABASE_URL).then(function(response){
-      response.json().then(function(json){
-        console.log(json);
-        callback(null, json);
-      }).catch(function(error){
-        console.log(error);
-      });
-    }).catch(function(error){
-      callback(error, null)
+    const fetchDatafromServer = fetch(DBHelper.DATABASE_URL).then(function(response) {
+      return response.json()
     });
 
+    let dbPromise = idb.open(
+      "rastaurants-store", 1,
+      upgradeDB => {
+        upgradeDB.createObjectStore('restaurants')
+      });
+
+    const saveDataToIdb = function(restaurants) {
+      if (!window.indexedDB) {
+        console.log("indexedDB is not supported on this browser");
+        return;
+      }
+
+      dbPromise.then(db => {
+        const tx = db.transaction('restaurants', 'readwrite');
+        tx.objectStore('restaurants').put(restaurants, 'restaurants');
+        return tx.complete;
+      });
+    }
+
+    fetchDatafromServer.then(function(restaurants) {
+      callback(null, restaurants);
+      saveDataToIdb(restaurants);
+    }).catch(function(error) {
+      console.log(`${error}`);
+    });
+    // if (!window.indexedDB) {//return early from server if indexedDB not supported
+    //   fetchDataFromServer().then(function(data){
+    //     callback(null, data);
+    //   }).catch(function(error){
+    //     callback(error, null);
+    //   });
+    // } else if (idbHasData) {/**if idb, check if idb has data
+    //   if idb has data, return from db and then fetch content and update
+    //   database and call the assigned callback again
+    //   **/
+    //   fetchDataFromIDB().then(function(data) {
+    //     callback(null, data);
+    //     fetchDataFromServer().then(function(data) {
+    //       callback(null, data);
+    //       console.log('refreshed idb data');
+    //     }).catch(function(error){
+    //       callback(error, null);
+    //     });
+    //   }).catch(function(error) {
+    //     console.log(`E:FETCHING_FROM_IDB: ${error}`);
+    //   });
+    // } else {
+    //   /*if idb supported and idb does not have data (first run)
+    //   fetch from internet and then callback
+    //   */
+    //   fetchDataFromServer().then(function(data) {
+    //     callback(null, data);
+    //   }).catch(function(error){
+    //     callback(error, null);
+    //   });
+    // }
   }
 
   /**
@@ -149,24 +199,25 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    var returnAddr = `/img/${restaurant.photograph||'1'}.jpg`;
+    var returnAddr = `/img/${restaurant.photograph || '1'}.jpg`;
     //if there is no photograph, using {1.jpg}
-    console.log(`DB_HELPER_IMG: ${returnAddr}.png`)
+    // console.log(`DB_HELPER_IMG: ${returnAddr}.png`)
     return (returnAddr);
   }
 
   /**
    * Map marker for a restaurant.
    */
-   static mapMarkerForRestaurant(restaurant, map) {
+  static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-      {title: restaurant.name,
-      alt: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      keyboard: false,
+      {
+        title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant),
+        keyboard: false,
       })
-      marker.addTo(newMap);
+    marker.addTo(newMap);
     return marker;
   }
   /* static mapMarkerForRestaurant(restaurant, map) {
