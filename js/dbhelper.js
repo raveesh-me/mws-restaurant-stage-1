@@ -18,15 +18,22 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    const fetchDataFromServer = fetch(DBHelper.DATABASE_URL).then(function(response) {
-      return response.json()
-    });
-
     let dbPromise = idb.open(
       "rastaurants-store", 1,
       upgradeDB => {
         upgradeDB.createObjectStore('restaurants')
       });
+
+    const fetchDataFromServer = fetch(DBHelper.DATABASE_URL).then(function(response) {
+      return response.json();
+    });
+
+    const fetchDataFromIDB = dbPromise.then(db=>{
+      const tx = db.transaction('restaurants');
+      return tx.objectStore('restaurants').get('restaurants');
+    });
+
+
 
     const saveDataToIdb = function(restaurants) {
       if (!window.indexedDB) {
@@ -41,48 +48,31 @@ class DBHelper {
       });
     }
 
-    const fetchDataFromIDB = dbPromise.then(db=>{
-      const tx = db.transaction('restaurants');
-      return tx.objectStore('restaurants').get('restaurants');
-    });
-
-    fetchDataFromIDB.then(function(restaurants) {
+    const showRestaurants = function(restaurants){
       callback(null, restaurants);
-      // saveDataToIdb(restaurants);
-    }).catch(function(error) {
-      console.log(`${error}`);
-    });
-    // if (!window.indexedDB) {//return early from server if indexedDB not supported
-    //   fetchDataFromServer().then(function(data){
-    //     callback(null, data);
-    //   }).catch(function(error){
-    //     callback(error, null);
-    //   });
-    // } else if (idbHasData) {/**if idb, check if idb has data
-    //   if idb has data, return from db and then fetch content and update
-    //   database and call the assigned callback again
-    //   **/
-    //   fetchDataFromIDB().then(function(data) {
-    //     callback(null, data);
-    //     fetchDataFromServer().then(function(data) {
-    //       callback(null, data);
-    //       console.log('refreshed idb data');
-    //     }).catch(function(error){
-    //       callback(error, null);
-    //     });
-    //   }).catch(function(error) {
-    //     console.log(`E:FETCHING_FROM_IDB: ${error}`);
-    //   });
-    // } else {
-    //   /*if idb supported and idb does not have data (first run)
-    //   fetch from internet and then callback
-    //   */
-    //   fetchDataFromServer().then(function(data) {
-    //     callback(null, data);
-    //   }).catch(function(error){
-    //     callback(error, null);
-    //   });
-    // }
+    }
+
+    if(!window.indexedDB){
+      fetchDataFromServer().then(restaurants => {
+        showRestaurants(restaurants)
+      }).catch(function(error){
+        console.log(error);
+      });
+    }else{
+      fetchDataFromIDB.then(restaurants => {
+        if(!restaurants){
+          return fetchDataFromServer;
+        }
+        showRestaurants(restaurants);
+        return fetchDataFromServer;
+      }).then(restaurants=> {
+        showRestaurants(restaurants);
+        return saveDataToIdb(restaurants);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+
   }
 
   /**
