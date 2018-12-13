@@ -1,4 +1,3 @@
-importScripts('/js/dbhelper.js');
 importScripts('/js/idb_promised.js');
 
 //serviceworker install event
@@ -29,7 +28,7 @@ self.addEventListener('fetch', function(event){
 });
 
 //sync event for background sync
-self.addEventListener('sync', event => {
+syncFunction = event => {
   let dbPromise = idb.open("restaurants-store", 1);
   //get all messages from 'outbox' object store
   const getOutbox = dbPromise.then(db => {
@@ -50,12 +49,11 @@ self.addEventListener('sync', event => {
       messages => {
           return Promise.all(
             messages.map(message => {
-              fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+              fetch(`http://localhost:1337/reviews`, {
                 method: 'post',
                 body: JSON.stringify(message),
               }).then(
                 response => {
-                  console.log('POST response:');
                   if(response.statusText === 'Created'){
                     return deleteOutboxMessage(message);
                   }else{
@@ -69,4 +67,6 @@ self.addEventListener('sync', event => {
       console.log(err);
     })
   );
-});
+}
+
+self.addEventListener('sync', syncFunction);
