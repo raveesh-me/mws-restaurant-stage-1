@@ -5,9 +5,7 @@ var newMap;
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  if(!self.newMap){
     initMap();
-  }
 });
 
 /**
@@ -71,7 +69,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
-
+// image
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
   const imageBaseURL = DBHelper.imageUrlForRestaurant(restaurant);
@@ -147,7 +145,8 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  const dateTime = new Date(review.createdAt);
+  date.innerHTML = dateTime.toDateString();
   li.appendChild(date);
 
   const rating = document.createElement('p');
