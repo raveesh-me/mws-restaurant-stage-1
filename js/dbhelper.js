@@ -287,7 +287,6 @@ class DBHelper {
 
   //Sending a review
   static submitReview(message, cleanFormCallback, submitFormCallback){
-    console.log(message);
     let dbPromise = idb.open("restaurants-store", 1);
     dbPromise.then(db=> {
       //add message to indexedDB
@@ -305,5 +304,4 @@ class DBHelper {
       submitFormCallback();
     });
   }
-
 }

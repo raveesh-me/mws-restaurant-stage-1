@@ -33,7 +33,6 @@ window.addEventListener("DOMContentLoaded", () => {
       restaurant.reviews.push(message);
       fillReviewsHTML();
     }, ()=>{
-      console.log(`submitting without the bg sync`);
       //submit form callback
       //For when sync wont work / is unavailable
       fetch(`${DBHelper.DATABASE_URL}/reviews`, {
@@ -56,7 +55,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }).catch(error => {
         console.log(error);
       })
-      // form.submit();
     });
   });
 });
