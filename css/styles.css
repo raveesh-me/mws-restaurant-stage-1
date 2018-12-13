@@ -302,6 +302,10 @@ nav h1 a {
   margin-right: auto;
 }
 
+#no-reviews{
+	text-align: center;
+}
+
 /* =========================:Mobile Screen:===================== */
 @media screen and (max-width: 480px){
 

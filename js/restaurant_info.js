@@ -5,9 +5,7 @@ var newMap;
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  if(!self.newMap){
     initMap();
-  }
 });
 
 /**
@@ -71,7 +69,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
-
+// image
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
   const imageBaseURL = DBHelper.imageUrlForRestaurant(restaurant);
