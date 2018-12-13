@@ -22,7 +22,7 @@ class DBHelper {
       upgradeDB => {
         upgradeDB.createObjectStore('restaurants');
         upgradeDB.createObjectStore('reviews');
-        upgradeDB.createObjectStore('outbox');
+        upgradeDB.createObjectStore('outbox', {autoIncrement: true, keyPath: 'id'});
       });
 
     // to fetch data form the server
@@ -81,12 +81,7 @@ class DBHelper {
 
   static fetchReviewsByRestaurant(restaurant, callback) {
     // top level idb promise
-    let dbPromise = idb.open(
-      "restaurants-store", 1,
-      upgradeDB => {
-        upgradeDB.createObjectStore('restaurants');
-        upgradeDB.createObjectStore('reviews');
-      });
+    let dbPromise = idb.open("restaurants-store", 1);
 
     // review url
     const serverDataURL = `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant.id}`;
@@ -291,12 +286,24 @@ class DBHelper {
   }
 
   //Sending a review
-  static submitReview(message){
+  static submitReview(message, cleanFormCallback, submitFormCallback){
     console.log(message);
-    DBHelper.dbPromise.then(db=> {
-      
+    let dbPromise = idb.open("restaurants-store", 1);
+    dbPromise.then(db=> {
+      //add message to indexedDB
+      let tx = db.transaction('outbox', 'readwrite');
+      return tx.objectStore('outbox').put(message);
+    }).then(()=>{
+      //clean up the form and send the sync signal
+      cleanFormCallback();
+      navigator.serviceWorker.ready.then(swRegistration => {
+        return swRegistration.sync.register('outbox');
+      });
+    }).catch(err => {
+      //if the above fails, use the standard form.submit()
+      console.log(err);
+      submitFormCallback();
     });
-
   }
 
 }

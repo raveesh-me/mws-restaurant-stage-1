@@ -23,7 +23,15 @@ window.addEventListener("load", () => {
       "rating": formRating.value,
       "comments": formComments.value
     }
-    DBHelper.submitReview(message);
+    DBHelper.submitReview(message, ()=>{
+      //cleanFormCallback
+      formRating.value = '1';
+      formName.value = '';
+      formComments.value = '';
+    }, ()=>{
+      //submit form callback
+      form.submit();
+    });
   });
 });
 /**
