@@ -9,26 +9,25 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}`;
   }
-
-
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
     let dbPromise = idb.open(
-      "rastaurants-store", 1,
+      "restaurants-store", 1,
       upgradeDB => {
-        upgradeDB.createObjectStore('restaurants')
+        upgradeDB.createObjectStore('restaurants');
+        upgradeDB.createObjectStore('reviews')
       });
 
-    const fetchDataFromServer = fetch(DBHelper.DATABASE_URL).then(function(response) {
+    const fetchDataFromServer = fetch(`${DBHelper.DATABASE_URL}/restaurants`).then(function(response) {
       return response.json();
     });
 
-    const fetchDataFromIDB = dbPromise.then(db=>{
+    const fetchDataFromIDB = dbPromise.then(db => {
       const tx = db.transaction('restaurants');
       return tx.objectStore('restaurants').get('restaurants');
     });
@@ -48,24 +47,24 @@ class DBHelper {
       });
     }
 
-    const showRestaurants = function(restaurants){
+    const showRestaurants = function(restaurants) {
       callback(null, restaurants);
     }
 
-    if(!window.indexedDB){
+    if (!window.indexedDB) {
       fetchDataFromServer().then(restaurants => {
         showRestaurants(restaurants)
-      }).catch(function(error){
+      }).catch(function(error) {
         console.log(error);
       });
-    }else{
+    } else {
       fetchDataFromIDB.then(restaurants => {
-        if(!restaurants){
+        if (!restaurants) {
           return fetchDataFromServer;
         }
         showRestaurants(restaurants);
         return fetchDataFromServer;
-      }).then(restaurants=> {
+      }).then(restaurants => {
         showRestaurants(restaurants);
         return saveDataToIdb(restaurants);
       }).catch(error => {
@@ -73,6 +72,60 @@ class DBHelper {
       });
     }
 
+  }
+
+  static fetchReviewsByRestaurant(restaurant, callback) {
+    let dbPromise = idb.open(
+      "restaurants-store", 1,
+      upgradeDB => {
+        upgradeDB.createObjectStore('restaurants');
+        upgradeDB.createObjectStore('reviews');
+    });
+
+    const serverDataURL = `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant.id}`;
+    const fetchDataFromServer = fetch(serverDataURL).then(function(response) {
+      console.log(`response: ${response}`)
+      return response.json();
+    });
+
+    const fetchDataFromIDB = dbPromise.then(db => {
+      const tx = db.transaction('reviews');
+      return tx.objectStore('reviews').get(`${restaurant.id}`);
+    });
+
+    const saveDataToIdb = function(reviews) {
+      if (!window.indexedDB) {
+        console.log("indexedDB is not supported on this browser");
+        return;
+      }
+      dbPromise.then(db => {
+        const tx = db.transaction('reviews', 'readwrite');
+        tx.objectStore('reviews').put(/*value*/reviews, /*key*/`${restaurant.id}`);
+        return tx.complete;
+      });
+    }
+    // Fetch reviews from idb and fetch them again from the network
+    if (!window.indexedDB) {
+      fetchDataFromServer().then(reviews => {
+        callback(null, reviews);
+      }).catch(function(error) {
+        callback(error, null);
+      });
+    } else {
+      fetchDataFromIDB.then(reviews => {
+        if (!reviews) {
+          return fetchDataFromServer;
+        }
+        callback(null, reviews);
+        console.log(`Fetching Data from server`)
+        return fetchDataFromServer;
+      }).then(reviews => {
+        callback(null, reviews);
+        return saveDataToIdb(reviews);
+      }).catch(error => {
+        callback(error, null);
+      });
+    }
   }
 
   /**
@@ -86,7 +139,15 @@ class DBHelper {
       } else {
         const restaurant = restaurants.find(r => r.id == id);
         if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
+          DBHelper.fetchReviewsByRestaurant(restaurant, (error, reviews) => {
+            if (error) {
+              callback(error, restaurant);
+            } else {
+              restaurant.reviews = reviews;
+              console.log(restaurant);
+              callback(null, restaurant);
+            }
+          });
         } else { // Restaurant does not exist in the database
           callback('Restaurant does not exist', null);
         }
@@ -215,15 +276,5 @@ class DBHelper {
     marker.addTo(newMap);
     return marker;
   }
-  /* static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
-    return marker;
-  } */
 
 }
