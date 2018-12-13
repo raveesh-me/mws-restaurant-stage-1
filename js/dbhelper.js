@@ -66,7 +66,7 @@ class DBHelper {
         return fetchDataFromServer;
       }).then(restaurants => {
         showRestaurants(restaurants);
-        return saveDataToIdb(restaurants);
+        saveDataToIdb(restaurants);
       }).catch(error => {
         console.log(error);
       });
@@ -84,7 +84,6 @@ class DBHelper {
 
     const serverDataURL = `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant.id}`;
     const fetchDataFromServer = fetch(serverDataURL).then(function(response) {
-      console.log(`response: ${response}`)
       return response.json();
     });
 
@@ -94,13 +93,14 @@ class DBHelper {
     });
 
     const saveDataToIdb = function(reviews) {
+      const key = `${restaurant.id}`;
       if (!window.indexedDB) {
         console.log("indexedDB is not supported on this browser");
         return;
       }
       dbPromise.then(db => {
         const tx = db.transaction('reviews', 'readwrite');
-        tx.objectStore('reviews').put(/*value*/reviews, /*key*/`${restaurant.id}`);
+        tx.objectStore('reviews').put(reviews, key);
         return tx.complete;
       });
     }
@@ -117,11 +117,10 @@ class DBHelper {
           return fetchDataFromServer;
         }
         callback(null, reviews);
-        console.log(`Fetching Data from server`)
         return fetchDataFromServer;
       }).then(reviews => {
+        saveDataToIdb(reviews);
         callback(null, reviews);
-        return saveDataToIdb(reviews);
       }).catch(error => {
         callback(error, null);
       });
@@ -144,7 +143,6 @@ class DBHelper {
               callback(error, restaurant);
             } else {
               restaurant.reviews = reviews;
-              console.log(restaurant);
               callback(null, restaurant);
             }
           });
