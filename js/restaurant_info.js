@@ -89,6 +89,11 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
+  //fill restaurant-id for form
+  const restaurantID = document.getElementById('restaurant-id');
+  restaurantID.value = restaurant.id;
+
   // fill reviews
   fillReviewsHTML();
 }

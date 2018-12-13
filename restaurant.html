@@ -47,7 +47,32 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
-      <h3 id="review-headline">REVIEWS</h3>
+      <h3 class="review-headline">Your Review</h3>
+
+      <!---  review form ------------------------------->
+    <center>
+      <form class="review-form" id="review-form" action="http://localhost:1337/reviews/" method="post">
+        <input id="restaurant-id" type="hidden" name="restaurant_id" value="">
+        <label>Rating:<br>
+          <select name="rating">
+            <option value="1">1 star</option>
+            <option value="2">2 stars</option>
+            <option value="3">3 stars</option>
+            <option value="4">4 stars</option>
+            <option value="5">5 stars</option>
+          </select> <br>
+        </label>
+        <label>Name: <br>
+          <input type="text" name="name" value="">
+        </label> <br>
+        <label>Comments: <br>
+          <textarea name="comments" rows="4"></textarea>
+        </label> <br>
+        <button type="submit" name="button">Submit</button>
+
+      </form>
+    </center>
+      <h3 class="review-headline">Reviews</h3>
       <ul id="reviews-list"></ul>
       <p id="no-reviews"></p>
       <div id="add-review">
