@@ -29,10 +29,30 @@ Bests.
 * run `python -m SimpleHTTPServer` in the root folder to start the client server
 * visit localhost:8000 to test the website
 
-For the order of my work, 
+For the order of my work,
 * [Pull request 6](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/6): Loading from stage 2 server
 * [Pull request 7](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/7): Offline-first with IndexedDB
 * [Pull request 8](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/8): manifest.json
+
+Hope you enjoy it.
+Bests!
+
+## Stage 3
+
+### Lighthouse Scores:
+
+### Evaluator Notes:
+
+**Setting up the test environment:**
+* Download and run the [stage 3 server environment](https://github.com/udacity/mws-restaurant-stage-3) at port `1337`
+* Clone the repo
+* run `python -m SimpleHTTPServer` in the root folder to start the client server
+* visit localhost:8000 to test the website
+
+For the order of my work,
+* [Pull request 9](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/9): Loading from stage 3 server
+* [Pull request 10](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/10): Adding a review form
+
 
 Hope you enjoy it.
 Bests!
