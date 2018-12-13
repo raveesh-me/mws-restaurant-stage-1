@@ -50,7 +50,8 @@ Bests!
 * visit localhost:8000 to test the website
 
 For the order of my work,
-* [Pull request 9](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/9): Loading from stage 3 server
+* [Pull request 9](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/9), [Pull request 11](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/11): Loading from stage 3 server
+
 * [Pull request 10](https://github.com/raveesh-me/mws-restaurant-stage-1/pull/10): Adding a review form
 
 
