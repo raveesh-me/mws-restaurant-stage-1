@@ -16,6 +16,7 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
+    //declaring the idb promise
     let dbPromise = idb.open(
       "restaurants-store", 1,
       upgradeDB => {
@@ -23,23 +24,19 @@ class DBHelper {
         upgradeDB.createObjectStore('reviews')
       });
 
+    // to fetch data form the server
     const fetchDataFromServer = fetch(`${DBHelper.DATABASE_URL}/restaurants`).then(function(response) {
       return response.json();
     });
 
+    // to fetch data from the idb
     const fetchDataFromIDB = dbPromise.then(db => {
       const tx = db.transaction('restaurants');
       return tx.objectStore('restaurants').get('restaurants');
     });
 
-
-
-    const saveDataToIdb = function(restaurants) {
-      if (!window.indexedDB) {
-        console.log("indexedDB is not supported on this browser");
-        return;
-      }
-
+    //for saving data to indexed DB
+    const saveDataToIdb = restaurants => {
       dbPromise.then(db => {
         const tx = db.transaction('restaurants', 'readwrite');
         tx.objectStore('restaurants').put(restaurants, 'restaurants');
@@ -47,12 +44,18 @@ class DBHelper {
       });
     }
 
-    const showRestaurants = function(restaurants) {
-      callback(null, restaurants);
-    }
+    /*for upgrading data through idb
+    data goes internet -> idb -> screen
+    */
+    const upgradeDataThroughIDB = fetchDataFromServer.then(restaurants => {
+      return saveDataToIdb(restaurants);
+    }).then(() => {
+      return fetchDataFromIDB;
+    });
 
+    // the actual decision flow that takes place
     if (!window.indexedDB) {
-      fetchDataFromServer().then(restaurants => {
+      fetchDataFromServer.then(restaurants => {
         showRestaurants(restaurants)
       }).catch(function(error) {
         console.log(error);
@@ -60,53 +63,64 @@ class DBHelper {
     } else {
       fetchDataFromIDB.then(restaurants => {
         if (!restaurants) {
+          console.log(`there are no restaurants in idb`);
           return fetchDataFromServer;
+        } else {
+          callback(null, restaurants);
+          return upgradeDataThroughIDB;
         }
-        showRestaurants(restaurants);
-        return fetchDataFromServer;
       }).then(restaurants => {
-        showRestaurants(restaurants);
-        saveDataToIdb(restaurants);
+        // console.log("showing updated restaurants");
+        callback(null, restaurants);
       }).catch(error => {
-        console.log(error);
+        callback(error, null);
       });
     }
-
   }
 
   static fetchReviewsByRestaurant(restaurant, callback) {
+    // top level idb promise
     let dbPromise = idb.open(
       "restaurants-store", 1,
       upgradeDB => {
         upgradeDB.createObjectStore('restaurants');
         upgradeDB.createObjectStore('reviews');
-    });
+      });
 
+    // review url
     const serverDataURL = `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant.id}`;
+
+    //fetching data from the server
     const fetchDataFromServer = fetch(serverDataURL).then(function(response) {
       return response.json();
     });
 
+    // frtching data from idb
     const fetchDataFromIDB = dbPromise.then(db => {
       const tx = db.transaction('reviews');
       return tx.objectStore('reviews').get(`${restaurant.id}`);
     });
 
+    //saving data to idb
     const saveDataToIdb = function(reviews) {
       const key = `${restaurant.id}`;
-      if (!window.indexedDB) {
-        console.log("indexedDB is not supported on this browser");
-        return;
-      }
       dbPromise.then(db => {
         const tx = db.transaction('reviews', 'readwrite');
         tx.objectStore('reviews').put(reviews, key);
         return tx.complete;
       });
     }
+
+    //acess reviews from idb after updating the idb
+    const upgradeDataThroughIDB = fetchDataFromServer.then(reviews => {
+      return saveDataToIdb(reviews);
+    }).then(() => {
+      return reviews;
+    });
+
     // Fetch reviews from idb and fetch them again from the network
     if (!window.indexedDB) {
-      fetchDataFromServer().then(reviews => {
+      fetchDataFromServer.then(reviews => {
         callback(null, reviews);
       }).catch(function(error) {
         callback(error, null);
@@ -114,12 +128,12 @@ class DBHelper {
     } else {
       fetchDataFromIDB.then(reviews => {
         if (!reviews) {
+          console.log('no reviews in idb');
           return fetchDataFromServer;
         }
         callback(null, reviews);
-        return fetchDataFromServer;
+        return upgradeDataThroughIDB;
       }).then(reviews => {
-        saveDataToIdb(reviews);
         callback(null, reviews);
       }).catch(error => {
         callback(error, null);
