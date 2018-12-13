@@ -8,6 +8,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
     initMap();
 });
 
+window.addEventListener("load", () => {
+  let form = document.getElementById('review-form');
+  let formRestaurantId = document.getElementById('restaurant-id');
+  let formRating = document.getElementById('form-rating');
+  let formName = document.getElementById('form-name');
+  let formComments = document.getElementById('form-comments');
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const message = {
+      "restaurant_id": formRestaurantId.value,
+      "name": formName.value,
+      "rating": formRating.value,
+      "comments": formComments.value
+    }
+    DBHelper.submitReview(message);
+  });
+});
 /**
  * Initialize leaflet map
  */

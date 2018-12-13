@@ -51,10 +51,10 @@
 
       <!---  review form ------------------------------->
     <center>
-      <form class="review-form" id="review-form" action="http://localhost:1337/reviews/" method="post">
+      <form class="review-form" id="review-form" action="http://localhost:1337/reviews/" method="POST">
         <input id="restaurant-id" type="hidden" name="restaurant_id" value="">
         <label>Rating:<br>
-          <select name="rating">
+          <select id="form-rating" name="rating" required>
             <option value="1">1 star</option>
             <option value="2">2 stars</option>
             <option value="3">3 stars</option>
@@ -63,13 +63,12 @@
           </select> <br>
         </label>
         <label>Name: <br>
-          <input type="text" name="name" value="">
+          <input id="form-name" type="text" name="name" value="" required>
         </label> <br>
         <label>Comments: <br>
-          <textarea name="comments" rows="4"></textarea>
+          <textarea id="form-comments" name="comments" rows="4" required></textarea>
         </label> <br>
         <button type="submit" name="button">Submit</button>
-
       </form>
     </center>
       <h3 class="review-headline">Reviews</h3>
@@ -92,6 +91,7 @@
   <!-- Database helpers -->
   <script type="text/javascript" charset="utf-8" src="js/idb_promised.js"></script>
   <script type="text/javascript" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/sw-register.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->

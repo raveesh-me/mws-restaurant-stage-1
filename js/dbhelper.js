@@ -21,7 +21,8 @@ class DBHelper {
       "restaurants-store", 1,
       upgradeDB => {
         upgradeDB.createObjectStore('restaurants');
-        upgradeDB.createObjectStore('reviews')
+        upgradeDB.createObjectStore('reviews');
+        upgradeDB.createObjectStore('outbox');
       });
 
     // to fetch data form the server
@@ -287,6 +288,15 @@ class DBHelper {
       })
     marker.addTo(newMap);
     return marker;
+  }
+
+  //Sending a review
+  static submitReview(message){
+    console.log(message);
+    DBHelper.dbPromise.then(db=> {
+      
+    });
+
   }
 
 }
