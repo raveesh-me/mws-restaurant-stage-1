@@ -8,6 +8,56 @@ document.addEventListener('DOMContentLoaded', (event) => {
     initMap();
 });
 
+window.addEventListener("DOMContentLoaded", () => {
+  let form = document.getElementById('review-form');
+  let formRestaurantId = document.getElementById('restaurant-id');
+  let formRating = document.getElementById('form-rating');
+  let formName = document.getElementById('form-name');
+  let formComments = document.getElementById('form-comments');
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const message = {
+      "restaurant_id": formRestaurantId.value,
+      "name": formName.value,
+      "rating": formRating.value,
+      "comments": formComments.value
+    }
+    DBHelper.submitReview(message, ()=>{
+      let restaurant = self.restaurant;
+      //cleanFormCallback
+      formRating.value = '1';
+      formName.value = '';
+      formComments.value = '';
+      message.createdAt = new Date();
+      restaurant.reviews.push(message);
+      fillReviewsHTML();
+    }, ()=>{
+      //submit form callback
+      //For when sync wont work / is unavailable
+      fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+        //runs the fetch method
+        method: 'post',
+        body: message,
+      }).then(response => {
+        //checks if response returned something
+        if(response.statusText === 'Created'){
+          return response.json();
+        }else{
+          console.log(`can not post review`);
+          return;
+        }
+      }).then(data => {
+        //gets data and displays it on the dom
+        if(!data) return;
+        restaurant.reviews.push(data);
+        fillReviewsHTML();
+      }).catch(error => {
+        console.log(error);
+      })
+    });
+  });
+});
 /**
  * Initialize leaflet map
  */
@@ -89,6 +139,11 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
+  //fill restaurant-id for form
+  const restaurantID = document.getElementById('restaurant-id');
+  restaurantID.value = restaurant.id;
+
   // fill reviews
   fillReviewsHTML();
 }

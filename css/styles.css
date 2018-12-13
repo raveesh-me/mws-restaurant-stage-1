@@ -223,7 +223,7 @@ nav h1 a {
   /* position: absolute; */
   width: 100%;
 }
-#restaurant-name, #review-headline {
+#restaurant-name, .review-headline {
   color: #b56000;
   font-family: Arial,sans-serif;
   font-size: 20pt;
@@ -234,6 +234,27 @@ nav h1 a {
   line-height: 1.1;
   text-align: center;
 }
+
+.review-headline{
+	text-transform: none;
+	font-size: 18pt;
+}
+
+.review-form{
+	align-items: center;
+}
+
+#review-form label{
+	font-weight: bolder;
+	font-size: initial;
+}
+
+#review-form input, select, textarea, button{
+	width: 60%;
+	margin-bottom: 20px;
+	padding: 5px 0;
+}
+
 #restaurant-img {
   width: inherit;
 }
