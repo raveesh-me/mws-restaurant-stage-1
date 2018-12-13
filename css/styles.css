@@ -223,7 +223,7 @@ nav h1 a {
   /* position: absolute; */
   width: 100%;
 }
-#restaurant-name, #review_headline {
+#restaurant-name, #review-headline {
   color: #b56000;
   font-family: Arial,sans-serif;
   font-size: 20pt;
@@ -316,7 +316,7 @@ nav h1 a {
   #reviews-list li {
     max-width: calc(100vw - 30px);
   }
-  
+
 }
 
 /* =====================Leaflet control attribition============== */

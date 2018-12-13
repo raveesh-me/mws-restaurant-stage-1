@@ -5,7 +5,9 @@ var newMap;
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  initMap();
+  if(!self.newMap){
+    initMap();
+  }
 });
 
 /**
@@ -16,7 +18,7 @@ initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      self.newMap = L.map('map', {
+      self.newMap = new L.map('map', {
         center: [restaurant.latlng.lat, restaurant.latlng.lng],
         zoom: 16,
         scrollWheelZoom: false
@@ -118,19 +120,21 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  const container = document.getElementById('reviews-container');
+  // const container = document.getElementById('reviews-container');
+  const noReviews = document.getElementById('no-reviews');
   if (!reviews) {
-    const noReviews = document.createElement('p');
+    // const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
+    // container.appendChild(noReviews);
     return;
   }
+  noReviews.innerHTML = '';
   const ul = document.getElementById('reviews-list');
   ul.innerHTML = '';
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
-  container.appendChild(ul);
+  // container.appendChild(ul);
 }
 
 /**
