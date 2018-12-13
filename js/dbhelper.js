@@ -115,7 +115,7 @@ class DBHelper {
     const upgradeDataThroughIDB = fetchDataFromServer.then(reviews => {
       return saveDataToIdb(reviews);
     }).then(() => {
-      return reviews;
+      return fetchDataFromIDB;
     });
 
     // Fetch reviews from idb and fetch them again from the network
