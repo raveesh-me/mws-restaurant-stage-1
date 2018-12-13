@@ -1,6 +1,7 @@
 importScripts('/js/dbhelper.js');
 importScripts('/js/idb_promised.js');
 
+//serviceworker install event
 self.addEventListener('install', function(event){
 
     var urlsToCache = [
@@ -18,6 +19,7 @@ self.addEventListener('install', function(event){
     );
 });
 
+//serviceworker fetch event
 self.addEventListener('fetch', function(event){
     event.respondWith(
         caches.match(event.request).then(function(response){
@@ -26,22 +28,22 @@ self.addEventListener('fetch', function(event){
     );
 });
 
+//sync event for background sync
 self.addEventListener('sync', event => {
   let dbPromise = idb.open("restaurants-store", 1);
-
+  //get all messages from 'outbox' object store
   const getOutbox = dbPromise.then(db => {
     let tx = db.transaction('outbox');
     return tx.objectStore('outbox').getAll();
   });
 
+  //delete a certain message from idb object store
   const deleteOutboxMessage = message => {
     dbPromise.then(db => {
       let tx = db.transaction('outbox', 'readwrite');
       return tx.objectStore('outbox').delete(message.id);
     });
   }
-
-
 
   event.waitUntil(
     getOutbox.then(
