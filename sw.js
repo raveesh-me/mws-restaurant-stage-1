@@ -153,7 +153,6 @@ syncLikes = () => {
 
 
 self.addEventListener('sync', event => {
-  console.log(event.tag);
   switch(event.tag){
     case "outbox":
       event.waitUntil(
