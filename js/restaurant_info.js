@@ -143,6 +143,49 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   //fill restaurant-id for form
   const restaurantID = document.getElementById('restaurant-id');
   restaurantID.value = restaurant.id;
+  //Restaurant favorite heart
+  const heart = document.getElementById("favorite-heart");
+  heart.setAttribute("aria-label", `Toggle ${restaurant.name} as your favorite`);
+  heart.setAttribute("aria-checked", restaurant.is_favorite);
+
+
+  heart.onclick = function(){
+    console.log(`Heart touched`);
+    DBHelper.toggleHTMLFavorite(restaurant, ()=>{
+      //successcallback
+      changeHeart(heart);
+    }, ()=>{
+      //failure callback
+      let newIsFavorite;
+      if(restaurant.is_favorite === "true"){
+        newIsFavorite = false;
+      }else{
+        newIsFavorite = true;
+      }
+      fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
+        {method: "PUT"}).then(response => {
+          console.log(response);
+          if(response.status === "OK"){
+            changeHeart(heart);
+          }else{
+            console.log(`Something went wong`);
+          }
+        });
+    });
+  }
+
+  const changeHeart = (heart)=>{
+    let isChecked = heart.getAttribute("aria-checked");
+    if(isChecked === "true"){
+      heart.innerHTML = '<i class="far fa-heart"></i>';
+      heart.setAttribute("aria-checked", false);
+      restaurant.is_favorite = false;
+    }else{
+      heart.innerHTML = '<i class="fas fa-heart"></i>';
+      heart.setAttribute("aria-checked", true);
+      restaurant.is_favorite = true;
+    }
+  }
 
   // fill reviews
   fillReviewsHTML();

@@ -157,6 +157,7 @@ nav h1 a {
   /* padding: 0 30px 25px; */
   text-align: left;
   width: 260px;
+	position: relative;
 }
 
 #restaurants-list .restaurant-img {
@@ -199,6 +200,16 @@ nav h1 a {
   text-decoration: none;
   text-transform: uppercase;
   margin: 10px;
+}
+
+.fa-heart{
+	padding: 6px;
+	font-size: 35px;
+	color: white;
+	background: #b56000;
+	position: absolute;
+	top: -2px;
+	right: 10px;
 }
 
 /* ====================== Restaurant Details ====================== */
@@ -276,6 +287,7 @@ nav h1 a {
 	width: 100%;
 }
 #restaurant-container, #reviews-container {
+	position: relative;
   padding: 0 0 40px;
   width: 100%;
   align-content: center;

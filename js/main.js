@@ -174,6 +174,58 @@ createRestaurantHTML = (restaurant) => {
   image.sizes = "(max-width: 480px) calc(100vw - 30px), 260px";
   li.append(image);
 
+  const favorite = document.createElement('div');
+  favorite.id = `favorite-heart-${restaurant.id}`;
+  favorite.setAttribute("role", "chekcbox");
+  favorite.setAttribute("tabindex", "0");
+  favorite.setAttribute("aria-label", `Toggle ${restaurant.name} as your favorite`);
+  favorite.setAttribute("aria-checked", restaurant.is_favorite);
+  if(restaurant.is_favorite === "true"){
+    favorite.innerHTML = '<i class="fas fa-heart"></i>';
+  }else{
+    favorite.innerHTML = '<i class="far fa-heart"></i>';
+  }
+
+  favorite.onclick = function(){
+    console.log(`Heart touched`);
+    DBHelper.toggleHTMLFavorite(restaurant, ()=>{
+      //successcallback
+      changeHeart(favorite);
+    }, ()=>{
+      //failure callback
+      let newIsFavorite;
+      if(restaurant.is_favorite === "true"){
+        newIsFavorite = false;
+      }else{
+        newIsFavorite = true;
+      }
+      fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
+        {method: "PUT"}).then(response => {
+          console.log(response);
+          if(response.ok){
+            changeHeart(favorite);
+          }else{
+            console.log(`Something went wong`);
+          }
+        });
+    });
+  }
+
+  const changeHeart = (heart)=>{
+    let isChecked = heart.getAttribute("aria-checked");
+    if(isChecked === "true"){
+      heart.innerHTML = '<i class="far fa-heart"></i>';
+      heart.setAttribute("aria-checked", false);
+      restaurant.is_favorite = false;
+    }else{
+      heart.innerHTML = '<i class="fas fa-heart"></i>';
+      heart.setAttribute("aria-checked", true);
+      restaurant.is_favorite = true;
+    }
+  }
+
+  li.append(favorite);
+
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
@@ -189,10 +241,9 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  more.setAttribute('aria-label', `View ${restaurant.name} details`)
-  li.append(more)
-
-  return li
+  more.setAttribute('aria-label', `View ${restaurant.name} details`);
+  li.append(more);
+  return li;
 }
 
 /**

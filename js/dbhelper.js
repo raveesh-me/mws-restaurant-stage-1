@@ -23,6 +23,7 @@ class DBHelper {
         upgradeDB.createObjectStore('restaurants');
         upgradeDB.createObjectStore('reviews');
         upgradeDB.createObjectStore('outbox', {autoIncrement: true, keyPath: 'id'});
+        upgradeDB.createObjectStore('like-outbox', {autoIncrement: true, keyPath: 'pid'});
       });
 
     // to fetch data form the server
@@ -294,14 +295,35 @@ class DBHelper {
       return tx.objectStore('outbox').put(message);
     }).then(()=>{
       //clean up the form and send the sync signal
+      return navigator.serviceWorker.ready;
+    }).then(swRegistration => {
+      console.log("DONE DONE DONE");
       cleanFormCallback();
-      navigator.serviceWorker.ready.then(swRegistration => {
-        return swRegistration.sync.register('outbox');
-      });
+      return swRegistration.sync.register('outbox');
     }).catch(err => {
       //if the above fails, use the standard form.submit()
       console.log(err);
       submitFormCallback();
     });
+  }
+
+  //toggle restaurant favorite
+  static toggleHTMLFavorite(restaurant, successCallback, failureCallback ){
+    let dbPromise = idb.open("restaurants-store", 1);
+    dbPromise.then(db => {
+      //adds the restaurant to the outbox
+        let tx = db.transaction("like-outbox", "readwrite");
+        return tx.objectStore("like-outbox").put(restaurant);
+      }).then(()=>{
+        //toggle UI and send sync signal
+        return navigator.serviceWorker.ready;
+      }).then(swRegistration => {
+        successCallback();
+        return swRegistration.sync.register("like-outbox");
+      }).catch(err => {
+        //If sync fails, on towards fallback
+        console.log(err);
+        failureCallback();
+      });
   }
 }
