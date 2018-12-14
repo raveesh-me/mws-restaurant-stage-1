@@ -85,12 +85,50 @@ syncLikes = () => {
     });
   }
 
+  /*given an array of restaurants and a restaurant,
+   replaces the one with the same id with the new one*/
+  const replaceRestaurantInRestaurants = (restaurant, restaurants)=> {
+    return restaurants.map(restu => {
+      if(restu.id == restaurant.id) return restaurant;
+      return restu;
+    });
+  }
+
+
+  // Save an array of restaurants to idb
+  const saveRestaurantsToIDB = restaurants => {
+    dbPromise.then(db => {
+      let tx = db.transaction("restaurants", "readwrite");
+      return tx.objectStore("restaurants").put(restaurants, "restaurants");
+    }).catch(err => {
+      console.log(err)
+    });
+  }
+
+  //get Restaurants from IDB
+  const getRestaurantsFromIDB = dbPromise.then(db => {
+      let tx = db.transaction("restaurants");
+      return tx.objectStore("restaurants").get("restaurants");
+    });
+
+
+  //cycle data through idb
+  const appendRestaurantToIDB = newRestaurant => {
+    getRestaurantsFromIDB.then(oldrestaurants => {
+      return replaceRestaurantInRestaurants(newRestaurant, oldrestaurants);
+    }).then(newrestaurants => {
+      return saveRestaurantsToIDB(newrestaurants);
+    }).catch(err => {
+      console.log(err);
+    });
+  }
+
+
   //actual work
   getOutbox.then(
     restaurants => {
         return Promise.all(
           restaurants.map(restaurant => {
-            console.log(restaurant);
             let newIsFavorite;
             if(restaurant.is_favorite === "true"){
               newIsFavorite = false;
@@ -99,9 +137,13 @@ syncLikes = () => {
             }
             fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
                {method: "put"}).then(response => {
-                 response.json().then(data => {console.log(data)});
-                 if(response.ok) return deleteOutboxRestaurant(restaurant);
-               });
+                 if(!response.ok) return;
+                 return response.json();
+               }).then(newRestaurant => {
+                 appendRestaurantToIDB(newRestaurant);
+               }).then(()=>{
+                 return deleteOutboxRestaurant(restaurant);
+               })
           })
         )
     }).catch(err => {
@@ -111,7 +153,6 @@ syncLikes = () => {
 
 
 self.addEventListener('sync', event => {
-  console.log(event.tag);
   switch(event.tag){
     case "outbox":
       event.waitUntil(

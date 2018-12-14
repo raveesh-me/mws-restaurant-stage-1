@@ -176,7 +176,7 @@ createRestaurantHTML = (restaurant) => {
 
   const favorite = document.createElement('div');
   favorite.id = `favorite-heart-${restaurant.id}`;
-  favorite.setAttribute("role", "chekcbox");
+  favorite.setAttribute("role", "checkbox");
   favorite.setAttribute("tabindex", "0");
   favorite.setAttribute("aria-label", `Toggle ${restaurant.name} as your favorite`);
   favorite.setAttribute("aria-checked", restaurant.is_favorite);
@@ -187,7 +187,6 @@ createRestaurantHTML = (restaurant) => {
   }
 
   favorite.onclick = function(){
-    console.log(`Heart touched`);
     DBHelper.toggleHTMLFavorite(restaurant, ()=>{
       //successcallback
       changeHeart(favorite);
@@ -201,7 +200,6 @@ createRestaurantHTML = (restaurant) => {
       }
       fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
         {method: "PUT"}).then(response => {
-          console.log(response);
           if(response.ok){
             changeHeart(favorite);
           }else{
