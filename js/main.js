@@ -174,6 +174,21 @@ createRestaurantHTML = (restaurant) => {
   image.sizes = "(max-width: 480px) calc(100vw - 30px), 260px";
   li.append(image);
 
+  const favorite = document.createElement('i');
+  favorite.id = `favorite-heart-${restaurant.id}`;
+  favorite.classList.add("far fa-heart");
+  favorite.onclick = function(){
+    const heart  = document.getElementById(`favorite-heart-${restaurant.id}`);
+    if(heart.classList.contains("far")){
+      heart.classList.remove("far");
+      heart.classList.add("fas");
+    }else{
+      heart.classList.remove("fas");
+      heart.classList.add("far");
+    }
+  }
+  li.append(favorite);
+
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
@@ -189,10 +204,9 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  more.setAttribute('aria-label', `View ${restaurant.name} details`)
-  li.append(more)
-
-  return li
+  more.setAttribute('aria-label', `View ${restaurant.name} details`);
+  li.append(more);
+  return li;
 }
 
 /**

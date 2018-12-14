@@ -28,7 +28,7 @@ self.addEventListener('fetch', function(event){
 });
 
 //sync event for background sync
-syncFunction = event => {
+syncReviews = () => {
   let dbPromise = idb.open("restaurants-store", 1);
   //get all messages from 'outbox' object store
   const getOutbox = dbPromise.then(db => {
@@ -44,29 +44,82 @@ syncFunction = event => {
     });
   }
 
-  event.waitUntil(
-    getOutbox.then(
-      messages => {
-          return Promise.all(
-            messages.map(message => {
-              fetch(`http://localhost:1337/reviews`, {
-                method: 'post',
-                body: JSON.stringify(message),
-              }).then(
-                response => {
-                  if(response.statusText === 'Created'){
-                    return deleteOutboxMessage(message);
-                  }else{
-                    console.log(`Something went wrong`);
-                    return;
-                  }
-                })
-            })
-          )
-      }).catch(err => {
-      console.log(err);
-    })
-  );
+  //actual work
+  getOutbox.then(
+    messages => {
+        return Promise.all(
+          messages.map(message => {
+            fetch(`http://localhost:1337/reviews`, {
+              method: 'post',
+              body: JSON.stringify(message),
+            }).then(
+              response => {
+                if(response.statusText === 'Created'){
+                  return deleteOutboxMessage(message);
+                }else{
+                  console.log(`Something went wrong`);
+                  return;
+                }
+              })
+          })
+        )
+    }).catch(err => {
+    console.log(err);
+  });
 }
 
-self.addEventListener('sync', syncFunction);
+//sync likes:
+syncLikes = () => {
+  let dbPromise = idb.open("restaurants-store", 1);
+  //get all restaurants from 'outbox' object store
+  const getOutbox = dbPromise.then(db => {
+    let tx = db.transaction('like-outbox');
+    return tx.objectStore('like-outbox').getAll();
+  });
+
+  //delete a certain restaurant from idb object store
+  const deleteOutboxRestaurant = restaurant => {
+    dbPromise.then(db => {
+      let tx = db.transaction('like-outbox', 'readwrite');
+      return tx.objectStore('like-outbox').delete(restaurant.pid);
+    });
+  }
+
+  //actual work
+  getOutbox.then(
+    restaurants => {
+        return Promise.all(
+          restaurants.map(restaurant => {
+            console.log(restaurant);
+            let newIsFavorite;
+            if(restaurant.is_favorite === "true"){
+              newIsFavorite = false;
+            }else{
+              newIsFavorite = true;
+            }
+            fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
+               {method: "put"}).then(response => {
+                 if(response.ok) return deleteOutboxRestaurant(restaurant);
+               });
+          })
+        )
+    }).catch(err => {
+    console.log(err);
+  });
+}
+
+
+self.addEventListener('sync', event => {
+  console.log(event.tag);
+  switch(event.tag){
+    case "outbox":
+      event.waitUntil(
+        syncReviews()
+      );
+    case "like-outbox":
+      event.waitUntil(
+        syncLikes()
+      );
+  }
+
+});
