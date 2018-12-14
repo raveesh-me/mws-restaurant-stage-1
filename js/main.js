@@ -187,7 +187,6 @@ createRestaurantHTML = (restaurant) => {
   }
 
   favorite.onclick = function(){
-    console.log(`Heart touched`);
     DBHelper.toggleHTMLFavorite(restaurant, ()=>{
       //successcallback
       changeHeart(favorite);
@@ -201,7 +200,6 @@ createRestaurantHTML = (restaurant) => {
       }
       fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
         {method: "PUT"}).then(response => {
-          console.log(response);
           if(response.ok){
             changeHeart(favorite);
           }else{

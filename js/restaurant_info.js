@@ -147,10 +147,13 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const heart = document.getElementById("favorite-heart");
   heart.setAttribute("aria-label", `Toggle ${restaurant.name} as your favorite`);
   heart.setAttribute("aria-checked", restaurant.is_favorite);
-
+  if(restaurant.is_favorite === "true"){
+    heart.innerHTML = '<i class="fas fa-heart"></i>';
+  }else{
+    heart.innerHTML = '<i class="far fa-heart"></i>';
+  }
 
   heart.onclick = function(){
-    console.log(`Heart touched`);
     DBHelper.toggleHTMLFavorite(restaurant, ()=>{
       //successcallback
       changeHeart(heart);
@@ -164,8 +167,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
       }
       fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
         {method: "PUT"}).then(response => {
-          console.log(response);
-          if(response.status === "OK"){
+          if(response.ok){
             changeHeart(heart);
           }else{
             console.log(`Something went wong`);
