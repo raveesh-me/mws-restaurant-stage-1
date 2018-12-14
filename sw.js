@@ -99,6 +99,7 @@ syncLikes = () => {
             }
             fetch(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${newIsFavorite}`,
                {method: "put"}).then(response => {
+                 response.json().then(data => {console.log(data)});
                  if(response.ok) return deleteOutboxRestaurant(restaurant);
                });
           })
