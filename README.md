@@ -40,6 +40,14 @@ Bests!
 ## Stage 3
 
 ### Lighthouse Scores:
+master page:
+
+<img alt="master page score" src="https://i.ibb.co/5GZt7BT/master-score.png" alt="master-score" border="0">
+
+detail page:
+
+<img alt="detail page score" src="https://i.ibb.co/9qX96GC/detail-score.png" alt="detail-score" border="0">
+
 
 ### Evaluator Notes:
 
