@@ -176,7 +176,7 @@ createRestaurantHTML = (restaurant) => {
 
   const favorite = document.createElement('div');
   favorite.id = `favorite-heart-${restaurant.id}`;
-  favorite.setAttribute("role", "chekcbox");
+  favorite.setAttribute("role", "checkbox");
   favorite.setAttribute("tabindex", "0");
   favorite.setAttribute("aria-label", `Toggle ${restaurant.name} as your favorite`);
   favorite.setAttribute("aria-checked", restaurant.is_favorite);
